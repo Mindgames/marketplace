@@ -55,9 +55,22 @@ function fail(where, msg) {
   errors.push(`${where}: ${msg}`);
 }
 
-function shellQuote(token) {
+function shellQuote(token, envNames) {
   if (/^[A-Za-z0-9_@:/.,=+-]+$/.test(token)) return token;
-  return `"${token.replace(/(["\\$`])/g, "\\$1")}"`;
+  const escape = (text) => text.replace(/(["\\$`])/g, "\\$1");
+  const placeholder = /\$\{([A-Za-z_][A-Za-z0-9_]*)\}/g;
+  // Only plain placeholders are supported. Keep the whole argument literal if
+  // it contains other dollar syntax, including nested or default expressions.
+  if (token.replace(placeholder, "").includes("$")) return `"${escape(token)}"`;
+
+  let quoted = "";
+  let offset = 0;
+  for (const match of token.matchAll(placeholder)) {
+    quoted += escape(token.slice(offset, match.index));
+    quoted += envNames.has(match[1]) ? match[0] : escape(match[0]);
+    offset = match.index + match[0].length;
+  }
+  return `"${quoted}${escape(token.slice(offset))}"`;
 }
 
 function isStringArray(v) {
@@ -118,7 +131,8 @@ function validateEntry(type, slug, dir, entry) {
 function buildEntry(type, slug, dir, entry) {
   const { $schema, ...rest } = entry;
   const args = entry.install.args;
-  const command = `cline ${INSTALL_VERB[type]} ${args.map(shellQuote).join(" ")}`.trim();
+  const envNames = new Set((entry.install.env || []).map((env) => env.name));
+  const command = `cline ${INSTALL_VERB[type]} ${args.map((arg) => shellQuote(arg, envNames)).join(" ")}`.trim();
 
   let icon = entry.icon;
   let iconCopy = null;

@@ -64,6 +64,8 @@ Skills resolve sources the same way [`npx skills add`](https://github.com/vercel
 
 Secrets and environment variables that are not part of the command (for example `EXA_API_KEY`) go in `install.env` so a client can prompt for them.
 
+Arguments can also reference variables declared in `install.env` using plain `${NAME}` placeholders. The rendered command expands these only when run in a POSIX-compatible shell; the generator never reads their values. Set the variables before running the command. See [environment placeholders](./CONTRIBUTING.md#environment-placeholders-in-commands) for quoting rules and unsupported syntax.
+
 ### Icons
 
 Icons are published per entry. Every entry's `icon` field in `catalog.json` is already the absolute URL, so a client renders `entry.icon` directly and never has to build a URL. The underlying pattern is:
