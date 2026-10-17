@@ -67,7 +67,7 @@
         },
         "env": {
           "type": "array",
-          "description": "Secrets / environment variables the primitive needs at runtime that are not part of the install command (e.g. EXA_API_KEY).",
+          "description": "Environment variables the primitive needs at runtime (e.g. EXA_API_KEY), including names referenced by plain ${NAME} placeholders in install.args. Declared placeholders expand only when the rendered command is run in a POSIX-compatible shell; the generator never reads their values.",
           "items": {
             "type": "object",
             "properties": {

@@ -59,3 +59,27 @@ Order in `tags.json` is the display order for a filter UI, so place new tags tho
 - Entries should be high quality, maintained, and safe to install.
 - `verified: true` is reserved for entries the Cline team has reviewed; leave it `false` in your PR.
 - Keep `tagline` short (one sentence). Use `description` for detail.
+
+## Environment placeholders in commands
+
+For an environment value used inside an install argument, use a plain
+`${VARIABLE_NAME}` placeholder and declare that name in the same entry's
+`install.env`. For example, `"Authorization: Bearer ${SERVICE_TOKEN}"` together
+with `{ "name": "SERVICE_TOKEN", "required": true }` renders a double-quoted
+argument that expands in the user's POSIX-compatible shell when they run it.
+The generator never reads or embeds the environment value, and `install.args`
+remains unchanged for clients that handle arguments themselves.
+
+Names use letters, digits, and underscores and cannot start with a digit.
+Undeclared placeholders remain literal. If an argument contains other dollar
+syntax, such as `$NAME`, `$(...)`, `${NAME:-default}`, or nested placeholders,
+the entire argument remains literal. Other text, including quotes and
+backslashes, is preserved as literal text. Values with spaces or shell
+metacharacters remain one argument and are not evaluated as shell code.
+
+Set the declared variables before running the rendered command. An unset or
+empty variable follows the shell's normal double-quoted expansion behavior
+(empty in a normal shell; an unset variable may fail with `set -u`).
+
+Run `npm run test:commands` to exercise command rendering with fake values and
+a local CLI stub. These tests do not install servers or contact services.
