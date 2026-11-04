@@ -13,5 +13,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+      - name: Test catalog generator
+        run: npm test
       - name: Validate registry
         run: node scripts/generate.mjs --check

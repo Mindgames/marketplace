@@ -16,7 +16,12 @@ Thanks for adding to the Cline Marketplace. Each contribution is a single new fo
 
    ```bash
    npm run validate
+   npm test
    ```
+
+   The offline generator tests cover validation and catalog/icon generation in
+   checkout paths containing spaces, Unicode, `#`, and `%` characters. They use
+   temporary fixtures and do not publish or install anything.
 
 7. Open a PR.
 
