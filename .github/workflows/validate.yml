@@ -17,3 +17,5 @@ jobs:
         run: npm test
       - name: Validate registry
         run: node scripts/generate.mjs --check
+      - name: Test install command rendering
+        run: npm run test:commands

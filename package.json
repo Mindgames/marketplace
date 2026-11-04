@@ -7,6 +7,7 @@
     "test": "node --test tests/generate.test.mjs",
     "validate": "node scripts/generate.mjs --check",
     "generate": "node scripts/generate.mjs",
-    "build": "node scripts/generate.mjs"
+    "build": "node scripts/generate.mjs",
+    "test:commands": "node --test tests/install-command.test.mjs"
   }
 }
